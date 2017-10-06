@@ -13,6 +13,10 @@
    */
   SznElements.registerElement = (elementName, elementClass) => {
     customElements.define(elementName, class extends HTMLElement {
+      static get is() {
+        return elementName
+      }
+
       constructor() {
         super()
         this._broker = new elementClass(this, this.querySelector(`[data-${elementName}-ui]`))
