@@ -31,34 +31,36 @@
   /**
    * Processes the observed DOM mutations, creating and destroying instances of the custom elements as necessary.
    *
-   * @param {MutationRecord} mutations The DOM mutations that were observed.
+   * @param {Array<MutationRecord>} mutations The DOM mutations that were observed.
    */
   function processDOMMutations(mutations) {
-    for (const addedNode of toArray(mutations.addedNodes)) {
-      if (addedNode.nodeType !== Node.ELEMENT_NODE) {
-        continue
-      }
+    for (const mutation of mutations) {
+      for (const addedNode of toArray(mutation.addedNodes)) {
+        if (addedNode.nodeType !== Node.ELEMENT_NODE) {
+          continue
+        }
 
-      if (SznElements[addedNode.nodeName]) {
-        initElement(addedNode)
-      }
-      for (const elementName of registeredElementNames) {
-        for (const addedSubElement of toArray(addedNode.querySelectorAll(elementName))) {
-          initElement(addedSubElement)
+        if (SznElements[addedNode.nodeName.toLowerCase()]) {
+          initElement(addedNode)
+        }
+        for (const elementName of registeredElementNames) {
+          for (const addedSubElement of toArray(addedNode.querySelectorAll(elementName))) {
+            initElement(addedSubElement)
+          }
         }
       }
-    }
-    for (const removedNode of toArray(mutations.removedNodes)) {
-      if (removedNode.nodeType !== Node.ELEMENT_NODE) {
-        continue
-      }
+      for (const removedNode of toArray(mutation.removedNodes)) {
+        if (removedNode.nodeType !== Node.ELEMENT_NODE) {
+          continue
+        }
 
-      if (removedNode._customSznElement) {
-        destroyElement(removedNode)
-      }
-      for (const elementName of registeredElementNames) {
-        for (const addedSubElement of toArray(removedNode.querySelectorAll(elementName))) {
-          destroyElement(addedSubElement)
+        if (removedNode._customSznElement) {
+          destroyElement(removedNode)
+        }
+        for (const elementName of registeredElementNames) {
+          for (const addedSubElement of toArray(removedNode.querySelectorAll(elementName))) {
+            destroyElement(addedSubElement)
+          }
         }
       }
     }
@@ -70,7 +72,7 @@
    * @param {HTMLElement} element A custom szn-* HTML element.
    */
   function initElement(element) {
-    element._customSznElement = new SznElements[element.nodeName](
+    element._customSznElement = new SznElements[element.nodeName.toLowerCase()](
       element,
       element.querySelector(`[data-${element.nodeName}-ui]`),
     )
