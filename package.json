@@ -1,0 +1,32 @@
+{
+  "name": "szn-elements",
+  "version": "0.0.0",
+  "description": "Common runtime for the custom szn-* elements.",
+  "main": "szn-elements.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jurca/szn-elements.git"
+  },
+  "keywords": [
+    "custom",
+    "element",
+    "elements",
+    "szn",
+    "seznam",
+    "seznam.cz"
+  ],
+  "author": "Martin Jurča <martin.jurca@firma.seznam.cz>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jurca/szn-elements/issues"
+  },
+  "homepage": "https://github.com/jurca/szn-elements#readme",
+  "devDependencies": {
+    "eslint": "^4.8.0",
+    "eslint-config-fbjs-opensource": "^1.0.0",
+    "jest": "^21.2.1"
+  }
+}
