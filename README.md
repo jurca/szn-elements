@@ -23,6 +23,9 @@ The recommended use is described in the **Advanced usage** section.
 <script src="/path/to/custom/szn/element3.js"></script>
 ```
 
+This approach allows for bundling all these JS files together... a better
+approach would be to use HTTP2.
+
 ### Advanced usage
 
 ```html
@@ -59,6 +62,19 @@ The script injects two other scripts:
 The script chooses which runtime scripts to inject by detecting the features
 supported in the current browser, using the more modern features when possible
 in order to achieve better performance.
+
+#### Minified version
+
+In case you want to save every byte you can:
+
+```html
+<script>
+(function(p,v,s,e,c){
+c=window.customElements?'custom-elements':'mutation-observer.es'+v;
+document.write(s+p+'szn-elements.es'+v+e+s+p+c+e)
+}('/path/to/szn-elements/',window.Proxy ? 6 : 3,'<script src="','.js" async></' + 'script>'))
+</script>
+```
 
 ## Legacy browser support
 
