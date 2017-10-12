@@ -41,8 +41,8 @@ approach would be to use HTTP2.
     }
     document.write(
         '<script src="' + basePath + 'szn-elements.es' + (es6 ? '6' : '3') +
-        '.js" async></' + 'script>' +
-        '<script src="' + basePath + browserRuntime + '.js" async></' +
+        '.min.js" async></' + 'script>' +
+        '<script src="' + basePath + browserRuntime + '.min.js" async></' +
         'script>'
     )
   }())
@@ -54,10 +54,10 @@ approach would be to use HTTP2.
 ```
 
 The script injects two other scripts:
-* the core runtime (`szn-elements.es6.js` or `szn-elements.es3.js`)
-* the browser-specific runtime helper (`szn-elements-custom-elements.js`,
-  `szn-elements-mutation-observer.es6.js` or
-  `szn-elements-mutation-observer.es3.js`).
+* the core runtime (`szn-elements.es6.min.js` or `szn-elements.es3.min.js`)
+* the browser-specific runtime helper (`szn-elements-custom-elements.min.js`,
+  `szn-elements-mutation-observer.es6.min.js` or
+  `szn-elements-mutation-observer.es3.min.js`).
 
 The script chooses which runtime scripts to inject by detecting the features
 supported in the current browser, using the more modern features when possible
@@ -72,7 +72,7 @@ In case you want to save every byte you can:
 (function(p,v,s,e,c){
 c=window.customElements?'custom-elements':'mutation-observer.es'+v;
 document.write(s+p+'szn-elements.es'+v+e+s+p+c+e)
-}('/path/to/szn-elements/',window.Proxy ? 6 : 3,'<script src="','.js" async></' + 'script>'))
+}('/path/to/szn-elements/',window.Proxy ? 6 : 3,'<script src="','.min.js" async></' + 'script>'))
 </script>
 ```
 
