@@ -4,7 +4,8 @@
   "description": "Common runtime for the custom szn-* elements.",
   "main": "szn-elements.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "./node_modules/.bin/gulp"
   },
   "repository": {
     "type": "git",
@@ -25,8 +26,12 @@
   },
   "homepage": "https://github.com/jurca/szn-elements#readme",
   "devDependencies": {
+    "babel-preset-env": "^1.6.0",
     "eslint": "^4.8.0",
     "eslint-config-fbjs-opensource": "^1.0.0",
+    "gulp": "gulpjs/gulp#4.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-rename": "^1.2.2",
     "jest": "^21.2.1"
   }
 }
