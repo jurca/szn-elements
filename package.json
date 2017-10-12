@@ -27,6 +27,7 @@
   "homepage": "https://github.com/jurca/szn-elements#readme",
   "devDependencies": {
     "babel-preset-env": "^1.6.0",
+    "babel-preset-minify": "^0.2.0",
     "eslint": "^4.8.0",
     "eslint-config-fbjs-opensource": "^1.0.0",
     "gulp": "gulpjs/gulp#4.0",

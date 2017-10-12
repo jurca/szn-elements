@@ -46,7 +46,22 @@ function copyMutationObserverRuntime() {
     .pipe(gulp.dest('./dist'))
 }
 
-exports.default = gulp.parallel(
-  compile,
-  copy,
+function minify() {
+  return gulp
+    .src('./dist/*.js')
+    .pipe(babel({
+      presets: ['minify'],
+    }))
+    .pipe(rename({
+      suffix: '.min',
+    }))
+    .pipe(gulp.dest('./dist'))
+}
+
+exports.default = gulp.series(
+  gulp.parallel(
+    compile,
+    copy,
+  ),
+  minify,
 )
