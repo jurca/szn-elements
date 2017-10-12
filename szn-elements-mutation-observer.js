@@ -23,7 +23,7 @@
     }
 
     registeredElementNames.push(elementName)
-    for (const element of document.querySelectorAll(elementName)) {
+    for (const element of toArray(document.querySelectorAll(elementName))) {
       initElement(element)
     }
   }
