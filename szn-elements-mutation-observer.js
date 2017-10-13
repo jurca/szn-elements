@@ -54,7 +54,7 @@
           continue
         }
 
-        if (removedNode._customSznElement) {
+        if (removedNode._broker) {
           destroyElement(removedNode)
         }
         for (const elementName of registeredElementNames) {
@@ -72,16 +72,16 @@
    * @param {HTMLElement} element A custom szn-* HTML element.
    */
   function initElement(element) {
-    element._customSznElement = new SznElements[element.nodeName.toLowerCase()](
+    element._broker = new SznElements[element.nodeName.toLowerCase()](
       element,
       element.querySelector(`[data-${element.nodeName}-ui]`),
     )
     if (Object.defineProperty) { // IE 8 compatibility
-      Object.defineProperty(element, '_customSznElement', {enumerable: false})
+      Object.defineProperty(element, '_broker', {enumerable: false})
     }
 
-    if (element._customSznElement.onMount) {
-      element._customSznElement.onMount()
+    if (element._broker.onMount) {
+      element._broker.onMount()
     }
   }
 
@@ -92,14 +92,14 @@
    * @param {HTMLElement} element A custom szn-* HTML element.
    */
   function destroyElement(element) {
-    if (!element._customSznElement) {
+    if (!element._broker) {
       return
     }
 
-    if (element._customSznElement.onUnmount) {
-      element._customSznElement.onUnmount()
+    if (element._broker.onUnmount) {
+      element._broker.onUnmount()
     }
-    delete element._customSznElement
+    delete element._broker
   }
 
   /**
