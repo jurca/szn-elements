@@ -69,10 +69,10 @@ In case you want to save every byte you can:
 
 ```html
 <script>
-(function(p,v,s,e,c){
+!function(p,v,s,e,c){
 c=window.customElements?'custom-elements':'mutation-observer.es'+v;
 document.write(s+p+'szn-elements.es'+v+e+s+p+c+e)
-}('/path/to/szn-elements/',window.Proxy ? 6 : 3,'<script src="','.min.js" async></' + 'script>'))
+}('/path/to/szn-elements/',window.Proxy?6:3,'<script src="','.min.js" async></'+'script>')
 </script>
 ```
 
