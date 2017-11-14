@@ -1,5 +1,6 @@
 'use strict'
 
+const del = require('del')
 const gulp = require('gulp')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
@@ -65,7 +66,12 @@ function minify() {
     .pipe(gulp.dest('./dist'))
 }
 
+function clean() {
+  return del('./dist')
+}
+
 exports.default = gulp.series(
+  clean,
   gulp.parallel(
     compile,
     copy,
