@@ -1,5 +1,5 @@
 {
-  "name": "szn-elements",
+  "name": "@jurca/szn-elements",
   "version": "0.0.0",
   "description": "Common runtime for the custom szn-* elements.",
   "main": "szn-elements.js",
@@ -10,6 +10,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jurca/szn-elements.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "custom",
