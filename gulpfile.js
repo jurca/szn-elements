@@ -24,7 +24,14 @@ const copy = gulp.parallel(
   copyRuntime,
   copyCustomElementsRuntime,
   copyMutationObserverRuntime,
+  copyPackageMetaFiles,
 )
+
+function copyPackageMetaFiles() {
+  return gulp
+    .src(['./LICENSE', './package.json', './README.md'])
+    .pipe(gulp.dest('./dist'))
+}
 
 function copyRuntime() {
   return gulp
