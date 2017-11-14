@@ -5,7 +5,9 @@
   "main": "szn-elements.js",
   "scripts": {
     "test": "jest",
-    "build": "./node_modules/.bin/gulp"
+    "build": "./node_modules/.bin/gulp",
+    "prepublishOnly": "echo Run \\'npm run publish-package\\' instead && exit 1",
+    "publish-package": "npm run build && npm publish --ignore-scripts dist"
   },
   "repository": {
     "type": "git",
