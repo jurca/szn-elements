@@ -57,17 +57,19 @@
   }
 
   /**
-   * Returns an iterator that yields all so-far registered custom elements.
+   * Returns an all so-far known custom elements that have not been registered yet.
    *
-   * @return {Iterator<[string, function(HTMLElement, ?HTMLElement)]>} Iterator that yields the DOM tag name and the
-   *         custom element class tuple for each so-far registered custom element.
+   * @return {Array<[string, function(HTMLElement, ?HTMLElement)]>} An array of the DOM tag name and the
+   *         custom element class tuples for each so-far registered custom element.
    */
-  function *getUnregisteredElements() {
+  function getUnregisteredElements() {
+    const elements = []
     for (const key of Object.keys(SznElements)) {
       if (key.includes('-') && !registeredElements[key]) {
-        yield [key, SznElements[key]]
+        elements.push([key, SznElements[key]])
       }
     }
+    return elements
   }
 
   SznElements.init()
