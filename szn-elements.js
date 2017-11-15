@@ -24,25 +24,6 @@
   }
 
   /**
-   * Registers the provided callback to be triggered whenever any of the specified attributes change on the provided
-   * element. Changes to other attributes will be ignored.
-   *
-   * @param {HTMLElement} element The HTML element on which the attribute modifications are to be observed.
-   * @param {Array<string>} attributes The names of attributes that should be observed.
-   * @param {function(MutationRecord)} callback Callback executed whenever any of the specified attributes is modified.
-   * @return {function(): void} A function to disable the observing of the attributes. Use this to clean up.
-   */
-  SznElements.observeAttributes = (element, attributes, callback) => {
-    const observer = new MutationObserver(callback)
-    observer.observe(element, {
-      attributes: true,
-      attributeFilter: attributes,
-    })
-
-    return () => observer.disconnect()
-  }
-
-  /**
    * Registers the provided callback to be called when the specified szn- element has been properly initialized (this
    * might happen after the element has been added to the DOM, depending on the current runtime). The callback is
    * always executed asynchronously, even if the element is already initialized.
