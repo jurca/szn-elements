@@ -3,6 +3,8 @@
   const SznElements = global.SznElements = global.SznElements || {}
   const registeredElements = {}
 
+  const pendingElements = []
+
   /**
    * Initializes the runtime. This method should be called (if defined) whenever a new element is defined. Elements
    * that have been defined since the last call will be initialized in the runtime so they can be used in the browser.
@@ -38,6 +40,39 @@
     })
 
     return () => observer.disconnect()
+  }
+
+  /**
+   * Registers the provided callback to be called when the specified szn- element has been properly initialized (this
+   * might happen after the element has been added to the DOM, depending on the current runtime). The callback is
+   * always executed asynchronously, even if the element is already initialized.
+   *
+   * @param {HTMLElement} element The custom element.
+   * @param {function()} callback The callback to execute when the element has been initialized.
+   */
+  SznElements.awaitElementReady = (element, callback) => {
+    if (element._broker) {
+      setTimeout(callback, 0) // the callback should always be called asynchronously
+      return
+    }
+
+    pendingElements.push([element, callback])
+  }
+
+  /**
+   * Alerts the common runtime that the provided element has been properly initialized and invokes all registered
+   * callbacks.
+   *
+   * @param {HTMLElement} element The element that has been initialized.
+   */
+  SznElements._onElementReady = element => {
+    for (let i = pendingElements.length - 1; i >= 0; i--) {
+      const elementWithCallback = pendingElements[i]
+      if (elementWithCallback[0] === element) {
+        elementWithCallback[1]()
+        pendingElements.splice(i, 1)
+      }
+    }
   }
 
   /**

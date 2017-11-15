@@ -20,6 +20,7 @@
       constructor() {
         super()
         this._broker = new elementClass(this, this.querySelector(`[data-${elementName}-ui]`))
+        SznElements._onElementReady(this)
       }
 
       connectedCallback() {
