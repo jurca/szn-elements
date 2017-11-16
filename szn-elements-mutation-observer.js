@@ -76,9 +76,6 @@
       element,
       element.querySelector(`[data-${element.nodeName}-ui]`),
     )
-    if (Object.defineProperty) { // IE 8 compatibility
-      Object.defineProperty(element, '_broker', {enumerable: false})
-    }
     SznElements._onElementReady(element)
 
     if (element._broker.onMount) {
