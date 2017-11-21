@@ -72,6 +72,10 @@
    * @param {HTMLElement} element A custom szn-* HTML element.
    */
   function initElement(element) {
+    if (element._broker) {
+      return
+    }
+
     element._broker = new SznElements[element.nodeName.toLowerCase()](
       element,
       element.querySelector(`[data-${element.nodeName}-ui]`),
