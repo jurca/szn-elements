@@ -1,5 +1,7 @@
 'use strict'
 ;(global => {
+  const NOOP = () => {}
+
   const SznElements = global.SznElements = global.SznElements || {}
   const registeredElements = {}
 
@@ -38,6 +40,38 @@
     }
 
     pendingElements.push([element, callback])
+  }
+
+  /**
+   * Generates DOM from the provided HTML string, passing every element with the <code>data-szn-ref</code> attribute
+   * to the provided callback for further post-processing before returning the result.
+   *
+   * This is a helper function that can be used to generate a document fragment with multiple "root" elements or a
+   * single structured element.
+   *
+   * @param {string} html The HTML code to turn into DOM.
+   * @param {function(HTMLElement, string)=} refCallback A callback to invoked for each created element that has the
+   *        <code>data-szn-ref</code> attribute set.
+   * @param {boolean=} returnElement If <code>true</code>, the function returns only the created first element (with
+   *        its children), otherwise the function returns a document fragment containing all created nodes, including
+   *        text nodes containing whitespace. Defaults to <code>true</code>.
+   * @return {(DocumentFragment|HTMLElement)} The generated DOM node(s).
+   */
+  SznElements.buildDom = (html, refCallback = NOOP, returnElement = true) => {
+    const template = document.createElement('template')
+    template.innerHTML = html
+    const content = template.content || (() => {
+      const nodes = document.createDocumentFragment()
+      while (template.firstChild) {
+        nodes.appendChild(template.firstChild)
+      }
+      return nodes
+    })()
+    for (const referencedElement of Array.prototype.slice.call(content.querySelectorAll('[data-szn-ref]'))) {
+      refCallback(referencedElement, referencedElement.getAttribute('data-szn-ref'))
+    }
+
+    return returnElement ? content.firstElementChild : content;
   }
 
   /**
