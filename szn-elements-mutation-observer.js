@@ -25,8 +25,22 @@
     registeredElementNames.push(elementName)
     for (const element of toArray(document.querySelectorAll(elementName))) {
       initElement(element)
+      handleElementMount(element)
     }
   }
+
+  try {
+    const nativeElementFactory = document.createElement
+    // We want to make the behavior closer to how native custom elements work. while we cannot polyfill HTML processing
+    // done by the browser, we can at least slightly improve the behavior of the DOM API.
+    document.createElement = (...args) => {
+      const element = nativeElementFactory.apply(document, args)
+      if (SznElements[element.tagName.toLowerCase()] && element.tagName.indexOf('-') > -1) {
+        initElement(element)
+      }
+      return element
+    }
+  } catch (_) {}
 
   /**
    * Processes the observed DOM mutations, creating and destroying instances of the custom elements as necessary.
@@ -42,10 +56,12 @@
 
         if (SznElements[addedNode.nodeName.toLowerCase()]) {
           initElement(addedNode)
+          handleElementMount(addedNode)
         }
         for (const elementName of registeredElementNames) {
           for (const addedSubElement of toArray(addedNode.querySelectorAll(elementName))) {
             initElement(addedSubElement)
+            handleElementMount(addedSubElement)
           }
         }
       }
@@ -81,7 +97,15 @@
       element.querySelector(`[data-${element.nodeName}-ui]`),
     )
     SznElements._onElementReady(element)
+  }
 
+  /**
+   * Invokes the <code>onMount</code> method of the provided custom element's implementation, if the implementation
+   * does contain it.
+   *
+   * @param {HTMLElement} element The element that has been mounted to the DOM.
+   */
+  function handleElementMount(element) {
     if (element._broker.onMount) {
       element._broker.onMount()
     }
