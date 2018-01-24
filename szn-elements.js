@@ -71,7 +71,16 @@
       refCallback(referencedElement, referencedElement.getAttribute('data-szn-ref'))
     }
 
-    return returnElement ? content.firstElementChild : content;
+    if (!returnElement) {
+      return content
+    }
+
+    // IE/Edge does not support firstElementChild on document fragments :(
+    let firstElement = content.firstChild
+    while (firstElement && firstElement.nodeType !== 1) {
+      firstElement = firstElement.nextSibling
+    }
+    return firstElement
   }
 
   /**
