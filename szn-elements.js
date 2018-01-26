@@ -28,6 +28,14 @@
   const pendingElements = []
 
   /**
+   * A "map" used to track which CSS styles have already been injected into the document. The keys are the style
+   * identifiers of styles that already have been injected.
+   *
+   * @type {Object<string, boolean>}
+   */
+  const injectedStyles = {}
+
+  /**
    * Initializes the runtime. This method should be called (if defined) whenever a new element is defined. Elements
    * that have been defined since the last call will be initialized in the runtime so they can be used in the browser.
    *
@@ -101,6 +109,34 @@
       firstElement = firstElement.nextSibling
     }
     return firstElement
+  }
+
+  /**
+   * Injects the provided CSS styles, identified by the provided identifier, into the document's <code>head</code>
+   * using a newly created <code>style</code> element.
+   *
+   * The method has no effect if the styles identified by the provided identifier have already been injected.
+   *
+   * @param {string} styles CSS styles to inject (a CSS code).
+   * @param {string} stylesIdentifier The identifier of the styles to inject. This should be unique, but the same CSS
+   *        code should use the same identifier (if possible). The identifier must contain only lower-case english
+   *        alphabet letters, numbers and at least one dash (-).
+   */
+  SznElements.injectStyles = (styles, stylesIdentifier) => {
+    if (!injectedStyles[stylesIdentifier]) {
+      if (!/^[-a-z0-9]+$/.test(stylesIdentifier) || stylesIdentifier.indexOf('-') === -1) {
+        throw new Error(
+          'The styles identifier must contain only the lower-case english alphabet letters and numbers and it must ' +
+          `contain a dash, but "${stylesIdentifier}" has been provided`,
+        )
+      }
+
+      const stylesContainer = SznElements.buildDom(
+        `<style data-szn-elements-styles--${stylesIdentifier}>${styles}</style>`,
+      )
+      document.head.appendChild(stylesContainer)
+      injectedStyles[stylesIdentifier] = true
+    }
   }
 
   /**

@@ -199,6 +199,41 @@ describe('szn-elements', () => {
       })
     })
 
+    it('should declare the injectStyles method', () => {
+      expect(typeof SznElements.injectStyles).toBe('function')
+      expect(SznElements.injectStyles.length).toBe(2)
+    })
+
+    describe('injectStyles method', () => {
+      beforeEach(() => {
+        document.head.innerHTML = ''
+      })
+
+      it('should append the styles to the head element', () => {
+        SznElements.injectStyles('.lorem-ipsum { display: block }', 'foo-bar123')
+        const styles = document.head.lastChild
+        expect(styles.nodeName).toBe('STYLE')
+        expect(styles.hasAttribute('data-szn-elements-styles--foo-bar123')).toBe(true)
+        expect(styles.innerHTML).toBe('.lorem-ipsum { display: block }')
+      })
+
+      it('should allow injecting empty styles', () => {
+        SznElements.injectStyles('', 'foo-bar')
+      })
+
+      it('should reject invalid style identifiers', () => {
+        expect(() => SznElements.injectStyles('', 'foo')).toThrow(Error)
+        expect(() => SznElements.injectStyles('', 'foo-bAr')).toThrow(Error)
+        expect(() => SznElements.injectStyles('', 'foo-bar ')).toThrow(Error)
+      })
+
+      it('should inject each style only once', () => {
+        SznElements.injectStyles('', 'foo-bar')
+        SznElements.injectStyles('', 'foo-bar')
+        expect(document.querySelectorAll('style').length).toBe(1)
+      })
+    })
+
     it('should declare the _onElementReady method', () => {
       expect(typeof SznElements._onElementReady).toBe('function')
       expect(SznElements._onElementReady.length).toBe(1)
