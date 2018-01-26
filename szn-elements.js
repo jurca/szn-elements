@@ -1,10 +1,30 @@
 'use strict'
 ;(global => {
+  /**
+   * A no-op function used as a fallback whenever an optional callback is not provided.
+   *
+   * @type {function}
+   */
   const NOOP = () => {}
 
   const SznElements = global.SznElements = global.SznElements || {}
+
+  /**
+   * A "map" used to track which custom elements have already been registered with the currently used element runtime.
+   * The map is used to prevent multiple registration of the same custom elements since the <code>init</code> method
+   * (that registers all so-far known custom elements with the runtime once a runtime is available) gets called with
+   * every loaded szn-elements-related module.
+   *
+   * @type {Object<string, boolean>}
+   */
   const registeredElements = {}
 
+  /**
+   * Registry of all callbacks waiting for element initialization. Each entry is a tuple - the element for which the
+   * caller is waiting to be ready and the callback to invoked once the custom element has been fully initialized.
+   *
+   * @type {Array<[HTMLElement, function()]>}
+   */
   const pendingElements = []
 
   /**
