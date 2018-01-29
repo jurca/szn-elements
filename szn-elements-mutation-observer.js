@@ -3,6 +3,7 @@
   const SznElements = global.SznElements = global.SznElements || {}
   let observer
   const registeredElementNames = []
+  let buildDomPatched = false
 
   /**
    * Registers the provided custom element with the runtime. This will ensure that any occurrence of the custom element
@@ -14,6 +15,23 @@
    * @param {function(HTMLElement, ?HTMLElement)} elementClass The class representing the custom element.
    */
   SznElements.registerElement = (elementName, elementClass) => {
+    if (!buildDomPatched) {
+      const originalBuildDom = SznElements.buildDom
+      SznElements.buildDom = (...args) => {
+        const result = originalBuildDom.apply(SznElements, args)
+        for (const customElementName of Object.keys(SznElements).filter(property => property.indexOf('-') > -1)) {
+          if (result.nodeName.toLowerCase() === customElementName.toLowerCase()) {
+            initElement(result)
+          }
+          for (const child of toArray(result.querySelectorAll(customElementName))) {
+            initElement(child)
+          }
+        }
+        return result
+      }
+      buildDomPatched = true
+    }
+
     if (!observer) {
       observer = new MutationObserver(processDOMMutations)
       observer.observe(document.body, {
