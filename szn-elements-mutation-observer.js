@@ -125,7 +125,6 @@
     if (element._broker.onUnmount) {
       element._broker.onUnmount()
     }
-    delete element._broker
   }
 
   /**
