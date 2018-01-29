@@ -106,9 +106,10 @@
    * @param {HTMLElement} element The element that has been mounted to the DOM.
    */
   function handleElementMount(element) {
-    if (element._broker.onMount) {
+    if (!element._mounted && element._broker.onMount) {
       element._broker.onMount()
     }
+    element._mounted = true
   }
 
   /**
@@ -122,9 +123,10 @@
       return
     }
 
-    if (element._broker.onUnmount) {
+    if (element._mounted && element._broker.onUnmount) {
       element._broker.onUnmount()
     }
+    element._mounted = false
   }
 
   /**
