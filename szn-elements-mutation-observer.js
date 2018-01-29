@@ -89,11 +89,11 @@
         }
 
         if (removedNode._broker) {
-          destroyElement(removedNode)
+          handleElementUnmount(removedNode)
         }
         for (const elementName of registeredElementNames) {
           for (const addedSubElement of toArray(removedNode.querySelectorAll(elementName))) {
-            destroyElement(addedSubElement)
+            handleElementUnmount(addedSubElement)
           }
         }
       }
@@ -131,12 +131,12 @@
   }
 
   /**
-   * Destroys the custom element's instance. The instance is first notified of being unmounted from the DOM so that it
-   * can perform its own cleanup.
+   * Invokes the <code>onUnmount</code> method of the provided custom element's implementation, if the implementation
+   * does contain it.
    *
-   * @param {HTMLElement} element A custom szn-* HTML element.
+   * @param {HTMLElement} element A custom szn-* HTML element that has been unmounted from the DOM.
    */
-  function destroyElement(element) {
+  function handleElementUnmount(element) {
     if (!element._broker) {
       return
     }
