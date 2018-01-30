@@ -30,9 +30,13 @@ approach would be to use HTTP2.
 
 ```html
 <script>
+for (const _ of []);
+var forConstSupported = true; // Firefox 52 (ESR), Palemoon and others
+</script>
+<script>
   (function(){
     var basePath = '/path/to/szn-elements/';
-    var es6 = !!window.Proxy;
+    var es6 = !!window.Proxy && forConstSupported;
     var browserRuntime;
     if (window.customElements) {
       browserRuntime = 'custom-elements';
@@ -41,9 +45,8 @@ approach would be to use HTTP2.
     }
     document.write(
         '<script src="' + basePath + 'szn-elements.es' + (es6 ? '6' : '3') +
-        '.min.js" async></' + 'script>' +
-        '<script src="' + basePath + browserRuntime + '.min.js" async></' +
-        'script>'
+        '.min.js" async><\/script>' +
+        '<script src="' + basePath + browserRuntime + '.min.js" async><\/script>'
     )
   }())
 </script>
@@ -68,18 +71,26 @@ in order to achieve better performance.
 In case you want to save every byte you can:
 
 ```html
+<script>for(const _ of[]);var _=true;</script>
 <script>
 !function(p,v,s,e,c){
-c=window.customElements?'custom-elements':'mutation-observer.es'+v;
+c=self.customElements?'custom-elements':'mutation-observer.es'+v;
 document.write(s+p+'szn-elements.es'+v+e+s+p+c+e)
-}('/path/to/szn-elements/',window.Proxy?6:3,'<script src="','.min.js" async></'+'script>')
+}('/path/to/szn-elements/',(self.Proxy&&self._)?6:3,'<script src="','.min.js" async><\/script>')
 </script>
 ```
+
+## IE and Edge support
+
+Both IE and Edge (last checked with the 16 version) have no support for the
+`template` element and incomplete implementation of the document fragment (no
+support for `firstElementChild`). Use a polyfill for these features to enable
+support in these browsers.
 
 ## Legacy browser support
 
 To support legacy browsers (IE11, old Androids, etc.), you will need to include
-a babel-polyfill before the script above:
+a polyfill for the ES2017 features (e.g. the babel-polyfill) before the script above:
 
 ```html
 <!-- babel polyfill must be inject synchronously -->
