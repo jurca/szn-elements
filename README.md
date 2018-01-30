@@ -90,16 +90,18 @@ support in these browsers.
 ## Legacy browser support
 
 To support legacy browsers (IE11, old Androids, etc.), you will need to include
-a polyfill for the ES2017 features (e.g. the babel-polyfill) before the script above:
+a polyfill for the ES2017 features (e.g. the babel-polyfill) before the script
+above:
 
 ```html
 <!-- babel polyfill must be inject synchronously -->
 <script src="/bath/to/babel-polyfill.js"></script>
 ```
 
-To support IE 9-10, use this MutationObserver polyfill
-(https://www.npmjs.com/package/mutation-observer) like this (IE 10 does not
-support conditional comments, so we have to use a script):
+To support IE 9-10 is theoretically possible with correct polyfills, use this
+MutationObserver polyfill (https://www.npmjs.com/package/mutation-observer)
+like this (IE 10 does not support conditional comments, so we have to use a
+script):
 
 ```html
 <script>
