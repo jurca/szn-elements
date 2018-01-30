@@ -88,27 +88,12 @@
   SznElements.buildDom = (html, refCallback = NOOP, returnElement = true) => {
     const template = document.createElement('template')
     template.innerHTML = html
-    const content = template.content || (() => {
-      const nodes = document.createDocumentFragment()
-      while (template.firstChild) {
-        nodes.appendChild(template.firstChild)
-      }
-      return nodes
-    })()
-    for (const referencedElement of Array.prototype.slice.call(content.querySelectorAll('[data-szn-ref]'))) {
+    const content = document.importNode(template.content, true)
+    for (const referencedElement of Array.from(content.querySelectorAll('[data-szn-ref]'))) {
       refCallback(referencedElement, referencedElement.getAttribute('data-szn-ref'))
     }
 
-    if (!returnElement) {
-      return content
-    }
-
-    // IE/Edge does not support firstElementChild on document fragments :(
-    let firstElement = content.firstChild
-    while (firstElement && firstElement.nodeType !== 1) {
-      firstElement = firstElement.nextSibling
-    }
-    return firstElement
+    return returnElement ? content.firstElementChild : content
   }
 
   /**
@@ -124,7 +109,7 @@
    */
   SznElements.injectStyles = (styles, stylesIdentifier) => {
     if (!injectedStyles[stylesIdentifier]) {
-      if (!/^[-a-z0-9]+$/.test(stylesIdentifier) || stylesIdentifier.indexOf('-') === -1) {
+      if (!/^[-a-z0-9]+$/.test(stylesIdentifier) || !stylesIdentifier.includes('-')) {
         throw new Error(
           'The styles identifier must contain only the lower-case english alphabet letters and numbers and it must ' +
           `contain a dash, but "${stylesIdentifier}" has been provided`,
@@ -147,9 +132,9 @@
    */
   SznElements._onElementReady = element => {
     for (let i = pendingElements.length - 1; i >= 0; i--) {
-      const elementWithCallback = pendingElements[i]
-      if (elementWithCallback[0] === element) {
-        elementWithCallback[1]()
+      const [pendingElement, callback] = pendingElements[i]
+      if (pendingElement === element) {
+        callback()
         pendingElements.splice(i, 1)
       }
     }

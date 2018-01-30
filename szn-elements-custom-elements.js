@@ -8,8 +8,8 @@
    *
    * This implementation relies on the custom elements API, see http://mdn.io/Custom_Elements for more details.
    *
-   * @param {string} elementName The DOM name of the custom element. This should be prefixed by "szn-".
-   * @param {function(HTMLElement, ?HTMLElement)} elementClass The class representing the custom element.
+   * @param {string} elementName The DOM node name of the custom element. This should be prefixed by "szn-".
+   * @param {function(HTMLElement)} elementClass The class representing the custom element.
    */
   SznElements.registerElement = (elementName, elementClass) => {
     customElements.define(elementName, class extends HTMLElement {
@@ -19,7 +19,7 @@
 
       constructor() {
         super()
-        this._broker = new elementClass(this, this.querySelector(`[data-${elementName}-ui]`))
+        this._broker = new elementClass(this)
         SznElements._onElementReady(this)
       }
 

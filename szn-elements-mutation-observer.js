@@ -1,8 +1,27 @@
 'use strict'
 ;(global => {
   const SznElements = global.SznElements = global.SznElements || {}
+
+  /**
+   * The DOM mutation observer used to watch to insertion and removal of custom elements to and from the document.
+   *
+   * @type {?MutationObserver}
+   */
   let observer
+
+  /**
+   * Element names of the custom elements that have been registered with the runtime.
+   *
+   * @type {Array<string>}
+   */
   const registeredElementNames = []
+
+  /**
+   * Flag marking whether the SznElements.buildDom method has already been patched to initialize the custom elements
+   * created using it.
+   *
+   * @type {boolean}
+   */
   let buildDomPatched = false
 
   /**
@@ -11,19 +30,19 @@
    *
    * This implementation relies on the MutationObserver API, see http://mdn.io/MutationObserver for more details.
    *
-   * @param {string} elementName The DOM name of the custom element. This should be prefixed by "szn-".
-   * @param {function(HTMLElement, ?HTMLElement)} elementClass The class representing the custom element.
+   * @param {string} elementName The DOM node name of the custom element. This should be prefixed by "szn-".
+   * @param {function(HTMLElement)} elementClass The class representing the custom element.
    */
   SznElements.registerElement = (elementName, elementClass) => {
     if (!buildDomPatched) {
       const originalBuildDom = SznElements.buildDom
       SznElements.buildDom = (...args) => {
         const result = originalBuildDom.apply(SznElements, args)
-        for (const customElementName of Object.keys(SznElements).filter(property => property.indexOf('-') > -1)) {
+        for (const customElementName of Object.keys(SznElements).filter(property => property.includes('-'))) {
           if (result.nodeName.toLowerCase() === customElementName.toLowerCase()) {
             initElement(result)
           }
-          for (const child of toArray(result.querySelectorAll(customElementName))) {
+          for (const child of Array.from(result.querySelectorAll(customElementName))) {
             initElement(child)
           }
         }
@@ -41,7 +60,7 @@
     }
 
     registeredElementNames.push(elementName)
-    for (const element of toArray(document.querySelectorAll(elementName))) {
+    for (const element of Array.from(document.querySelectorAll(elementName))) {
       initElement(element)
       handleElementMount(element)
     }
@@ -53,7 +72,7 @@
     // done by the browser, we can at least slightly improve the behavior of the DOM API.
     document.createElement = (...args) => {
       const element = nativeElementFactory.apply(document, args)
-      if (SznElements[element.tagName.toLowerCase()] && element.tagName.indexOf('-') > -1) {
+      if (SznElements[element.tagName.toLowerCase()] && element.tagName.includes('-')) {
         initElement(element)
       }
       return element
@@ -67,7 +86,7 @@
    */
   function processDOMMutations(mutations) {
     for (const mutation of mutations) {
-      for (const addedNode of toArray(mutation.addedNodes)) {
+      for (const addedNode of Array.from(mutation.addedNodes)) {
         if (addedNode.nodeType !== Node.ELEMENT_NODE) {
           continue
         }
@@ -77,13 +96,13 @@
           handleElementMount(addedNode)
         }
         for (const elementName of registeredElementNames) {
-          for (const addedSubElement of toArray(addedNode.querySelectorAll(elementName))) {
+          for (const addedSubElement of Array.from(addedNode.querySelectorAll(elementName))) {
             initElement(addedSubElement)
             handleElementMount(addedSubElement)
           }
         }
       }
-      for (const removedNode of toArray(mutation.removedNodes)) {
+      for (const removedNode of Array.from(mutation.removedNodes)) {
         if (removedNode.nodeType !== Node.ELEMENT_NODE) {
           continue
         }
@@ -92,7 +111,7 @@
           handleElementUnmount(removedNode)
         }
         for (const elementName of registeredElementNames) {
-          for (const addedSubElement of toArray(removedNode.querySelectorAll(elementName))) {
+          for (const addedSubElement of Array.from(removedNode.querySelectorAll(elementName))) {
             handleElementUnmount(addedSubElement)
           }
         }
@@ -110,10 +129,7 @@
       return
     }
 
-    element._broker = new SznElements[element.nodeName.toLowerCase()](
-      element,
-      element.querySelector(`[data-${element.nodeName}-ui]`),
-    )
+    element._broker = new SznElements[element.nodeName.toLowerCase()](element)
     SznElements._onElementReady(element)
   }
 
@@ -145,17 +161,6 @@
       element._broker.onUnmount()
     }
     element._mounted = false
-  }
-
-  /**
-   * Creates an array with the contents of the provided collection.
-   *
-   * @param {{length: number}} collection A densely-populated collection of values and finite size.
-   * @return {Array} The contents of the collection as an array.
-   */
-  function toArray(collection) {
-    // we cannot use Array.from because it might not be present in the legacy browsers
-    return Array.prototype.slice.call(collection)
   }
 
   if (SznElements.init) {

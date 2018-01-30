@@ -38,21 +38,13 @@ describe('szn-elements-custom-elements', () => {
     describe('registerElement method', () => {
       it('should define a valid custom element that used the provided implementation', () => {
         class SznFooBroker {
-          constructor(root, uiContainer, ...extraArgs) {
+          constructor(root, ...extraArgs) {
             expect(extraArgs.length).toBe(0)
             this.root = root
-            expect(uiContainer).toBe(null)
           }
         }
 
-        let uiContainerLookedFor = false
-        global.HTMLElement = class HTMLElement {
-          querySelector(selector) {
-            expect(selector).toBe('[data-szn-foo-ui]')
-            uiContainerLookedFor = true
-            return null
-          }
-        }
+        global.HTMLElement = class HTMLElement {}
 
         let defined = false
         let elementImplementation = null
@@ -79,7 +71,6 @@ describe('szn-elements-custom-elements', () => {
 
         const elementInstance = new elementImplementation() // we simulate document.createElement('szn-foo') like this
         expect(elementPassedToReadyCallback).toBe(elementInstance)
-        expect(uiContainerLookedFor).toBe(true)
         expect(elementInstance._broker instanceof SznFooBroker).toBe(true)
 
         // these should not crash if the onMount and onUnmount methods are not defined
