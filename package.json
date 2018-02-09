@@ -4,7 +4,7 @@
   "description": "Common runtime for the custom szn-* elements.",
   "main": "szn-elements.es6.js",
   "scripts": {
-    "test": "jest",
+    "test": "eslint --max-warnings=0 *.js && jest",
     "build": "./node_modules/.bin/gulp",
     "prepublishOnly": "echo Run \\'npm run publish-package\\' instead && exit 1",
     "publish-package": "npm test && git push && git push --tags && npm run build && npm publish --ignore-scripts dist"
