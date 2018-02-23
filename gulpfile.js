@@ -37,6 +37,7 @@ function copyPackageMetaFiles() {
 function copyRuntime() {
   return gulp
     .src('./szn-elements.js')
+    .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2015-compatible
     .pipe(rename('szn-elements.es6.js'))
     .pipe(gulp.dest('./dist'))
 }
@@ -44,12 +45,14 @@ function copyRuntime() {
 function copyCustomElementsRuntime() {
   return gulp
     .src('./szn-elements-custom-elements.js')
+    .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2015-compatible
     .pipe(gulp.dest('./dist'))
 }
 
 function copyMutationObserverRuntime() {
   return gulp
     .src('./szn-elements-mutation-observer.js')
+    .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2015-compatible
     .pipe(rename('szn-elements-mutation-observer.es6.js'))
     .pipe(gulp.dest('./dist'))
 }
