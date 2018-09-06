@@ -7,7 +7,7 @@ const rename = require('gulp-rename')
 
 function compile() {
   return gulp
-    .src(['./szn-elements.js', './szn-elements-mutation-observer.js'])
+    .src(['./szn-elements.js', './szn-elements-mutation-observer.js', './szn-elements-noop.js'])
     .pipe(babel({
       presets: [['env', {
         targets: {
@@ -25,6 +25,7 @@ const copy = gulp.parallel(
   copyRuntime,
   copyCustomElementsRuntime,
   copyMutationObserverRuntime,
+  copyNoopRuntime,
   copyPackageMetaFiles,
 )
 
@@ -54,6 +55,14 @@ function copyMutationObserverRuntime() {
     .src('./szn-elements-mutation-observer.js')
     .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2015-compatible
     .pipe(rename('szn-elements-mutation-observer.es6.js'))
+    .pipe(gulp.dest('./dist'))
+}
+
+function copyNoopRuntime() {
+  return gulp
+    .src('./szn-elements-noop.js')
+    .pipe(babel()) // strips trailing commas in function calls (ES2017) so the source becomes ES2015-compatible
+    .pipe(rename('szn-elements-noop.es6.js'))
     .pipe(gulp.dest('./dist'))
 }
 
