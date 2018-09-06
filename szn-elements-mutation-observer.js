@@ -125,7 +125,7 @@
    * @param {HTMLElement} element A custom szn-* HTML element.
    */
   function initElement(element) {
-    if (element._broker || element.hasAttribute('data-szn-elements--init-on-demand')) {
+    if (element._broker) {
       return
     }
 
@@ -140,7 +140,7 @@
    * @param {HTMLElement} element The element that has been mounted to the DOM.
    */
   function handleElementMount(element) {
-    if (!element._mounted && element._broker && element._broker.onMount) {
+    if (!element._mounted && element._broker.onMount && !element.hasAttribute('data-szn-elements--init-on-demand')) {
       element._broker.onMount()
     }
     element._mounted = true
@@ -157,7 +157,7 @@
       return
     }
 
-    if (element._mounted && element._broker.onUnmount) {
+    if (element._mounted && element._broker.onUnmount && !element.hasAttribute('data-szn-elements--init-on-demand')) {
       element._broker.onUnmount()
     }
     element._mounted = false

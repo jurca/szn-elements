@@ -20,20 +20,19 @@
       constructor() {
         super()
 
-        if (!this.hasAttribute('data-szn-elements--init-on-demand')) {
-          this._broker = new elementClass(this)
-          SznElements._onElementReady(this)
-        }
+        // attributes do not exists at this point, so we have to check later
+        this._broker = new elementClass(this)
+        SznElements._onElementReady(this)
       }
 
       connectedCallback() {
-        if (this._broker && this._broker.onMount) {
+        if (this._broker.onMount && !this.hasAttribute('data-szn-elements--init-on-demand')) {
           this._broker.onMount()
         }
       }
 
       disconnectedCallback() {
-        if (this._broker && this._broker.onUnmount) {
+        if (this._broker.onUnmount && !this.hasAttribute('data-szn-elements--init-on-demand')) {
           this._broker.onUnmount()
         }
       }
