@@ -44,7 +44,11 @@ describe('szn-elements-custom-elements', () => {
           }
         }
 
-        global.HTMLElement = class HTMLElement {}
+        global.HTMLElement = class HTMLElement {
+          hasAttribute() {
+            return false
+          }
+        }
 
         let defined = false
         let elementImplementation = null
