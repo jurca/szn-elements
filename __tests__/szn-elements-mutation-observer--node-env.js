@@ -59,4 +59,3 @@ describe('registered DOM mutation observer', () => {
     eval(code) // eslint-disable-line no-eval
   }
 })
-
