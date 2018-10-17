@@ -53,7 +53,8 @@
 
     if (!observer) {
       observer = new MutationObserver(processDOMMutations)
-      observer.observe(document.body, {
+      // Fallback to the documentElement just in case we were included synchronously in the <head> element
+      observer.observe(document.body || document.documentElement, {
         childList: true,
         subtree: true,
       })
