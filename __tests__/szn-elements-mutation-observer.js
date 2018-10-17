@@ -368,6 +368,14 @@ describe('szn-elements-custom-elements', () => {
       }
     })
 
+    it('should observe the body element and element list modifications within the subtree', () => {
+      expect(mutationObserver.target).toBe(document.body)
+      expect(mutationObserver.options).toEqual({
+        childList: true,
+        subtree: true,
+      })
+    })
+
     function makeMutation(addedNodes, removedNodes) {
       return {
         type: 'childList',
