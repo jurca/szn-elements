@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jurca/szn-elements.git"
+    "url": "git+https://github.com/seznam/szn-elements.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
@@ -27,9 +27,9 @@
   "author": "Martin Jurča <martin.jurca@firma.seznam.cz>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jurca/szn-elements/issues"
+    "url": "https://github.com/seznam/szn-elements/issues"
   },
-  "homepage": "https://github.com/jurca/szn-elements#readme",
+  "homepage": "https://github.com/seznam/szn-elements#readme",
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-preset-minify": "^0.2.0",
