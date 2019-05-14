@@ -9,7 +9,7 @@ function compile() {
   return gulp
     .src(['./szn-elements.js', './szn-elements-mutation-observer.js', './szn-elements-noop.js'])
     .pipe(babel({
-      presets: [['env', {
+      presets: [['@babel/preset-env', {
         targets: {
           browsers: ['ie 8'],
         },
