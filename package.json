@@ -1,6 +1,6 @@
 {
   "name": "@seznam/szn-elements",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Common runtime for the custom szn-* elements.",
   "main": "szn-elements.es6.js",
   "scripts": {
